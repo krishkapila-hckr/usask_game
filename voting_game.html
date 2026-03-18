@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHAT UofS STUDENTS WANT 🎙️</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FFD700;
+    --hotpink: #FF2D78;
+    --cyan: #00F5FF;
+    --dark: #0a0a0f;
+    --darkpanel: #0f0f1a;
+    --green: #39FF14;
+    --orange: #FF6B00;
+    --purple: #BF5FFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: white;
+    font-family: 'VT323', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 4px);
+    pointer-events: none; z-index: 9999;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 245, 255, 0.012);
+    pointer-events: none; z-index: 9998;
+    animation: flicker 0.6s infinite;
+  }
+
+  @keyframes flicker { 0%,100%{opacity:1} 50%{opacity:0.96} }
+
+  .stars { position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:0; }
+  .star { position:absolute; background:white; border-radius:50%; animation:twinkle var(--d) infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.5)} }
+
+  .screen {
+    display: none; position: relative; z-index: 10;
+    min-height: 100vh; flex-direction: column;
+    align-items: center; justify-content: center; padding: 28px 20px;
+  }
+  .screen.active { display: flex; }
+
+  /* ── TYPOGRAPHY ── */
+  .show-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 3vw, 32px);
+    color: var(--gold);
+    text-shadow: 0 0 10px var(--gold), 0 0 30px var(--gold), 0 0 60px var(--orange), 4px 4px 0 #8B4513;
+    line-height: 1.7; animation: titlePulse 2s ease-in-out infinite;
+    margin-bottom: 6px; text-align: center;
+  }
+  @keyframes titlePulse {
+    0%,100%{text-shadow:0 0 10px var(--gold),0 0 30px var(--gold),0 0 60px var(--orange),4px 4px 0 #8B4513}
+    50%{text-shadow:0 0 20px var(--gold),0 0 60px var(--gold),0 0 100px var(--orange),4px 4px 0 #8B4513}
+  }
+
+  .show-subtitle {
+    font-family: 'VT323', monospace; font-size: clamp(18px,2.5vw,28px);
+    color: var(--cyan); text-shadow: 0 0 10px var(--cyan);
+    margin-bottom: 24px; letter-spacing: 4px; text-align: center;
+  }
+
+  .mic-emoji {
+    font-size: 70px; animation: bounce 1.2s ease-in-out infinite;
+    display: block; margin-bottom: 14px; filter: drop-shadow(0 0 20px var(--gold));
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-14px) rotate(5deg)} }
+
+  /* ── BUTTONS ── */
+  .btn-main {
+    font-family:'Press Start 2P',monospace; font-size:13px; padding:16px 32px;
+    background:var(--hotpink); color:white; border:4px solid white; cursor:pointer;
+    box-shadow:6px 6px 0 #8B0038,0 0 30px var(--hotpink);
+    transition:all 0.1s; animation:btnGlow 2s ease-in-out infinite;
+  }
+  @keyframes btnGlow {
+    0%,100%{box-shadow:6px 6px 0 #8B0038,0 0 30px var(--hotpink)}
+    50%{box-shadow:6px 6px 0 #8B0038,0 0 60px var(--hotpink),0 0 100px rgba(255,45,120,0.5)}
+  }
+  .btn-main:hover { transform:translate(-3px,-3px); box-shadow:9px 9px 0 #8B0038,0 0 80px var(--hotpink); }
+  .btn-main:active { transform:translate(3px,3px); box-shadow:3px 3px 0 #8B0038; }
+
+  .btn-secondary {
+    font-family:'Press Start 2P',monospace; font-size:10px; padding:12px 24px;
+    background:transparent; color:var(--cyan); border:2px solid var(--cyan); cursor:pointer;
+    box-shadow:4px 4px 0 #005f66; transition:all 0.1s;
+  }
+  .btn-secondary:hover { background:rgba(0,245,255,0.08); transform:translate(-2px,-2px); box-shadow:6px 6px 0 #005f66; }
+
+  /* ── INTRO ── */
+  #intro { gap:0; text-align:center; }
+  .hero-image { max-width:100%; width:300px; height:auto; margin-bottom:20px; border-radius:8px; box-shadow:0 0 40px rgba(255,215,0,0.2), 0 0 60px rgba(255,45,120,0.1); animation:heroGlow 2s ease-in-out infinite; }
+  @keyframes heroGlow { 0%,100%{box-shadow:0 0 40px rgba(255,215,0,0.2),0 0 60px rgba(255,45,120,0.1)} 50%{box-shadow:0 0 60px rgba(255,215,0,0.3),0 0 80px rgba(255,45,120,0.15)} }
+  .intro-desc { font-size:20px; color:#bbb; max-width:520px; line-height:1.6; margin-bottom:28px; }
+
+  .how-it-works { display:flex; flex-direction:column; align-items:center; width:100%; max-width:540px; margin-bottom:30px; }
+  .how-step {
+    display:flex; align-items:flex-start; gap:16px; width:100%;
+    background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.12); padding:14px 18px;
+  }
+  .how-step.hl { border-color:var(--gold); background:rgba(255,215,0,0.06); box-shadow:0 0 20px rgba(255,215,0,0.15); }
+  .how-arrow { font-size:16px; color:rgba(255,255,255,0.2); margin:3px 0; }
+  .step-icon { font-size:30px; min-width:40px; text-align:center; line-height:1; }
+  .step-body { display:flex; flex-direction:column; gap:4px; text-align:left; }
+  .step-title { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--gold); letter-spacing:1px; }
+  .step-desc { font-size:17px; color:#ccc; line-height:1.4; }
+
+  /* ── ROUND ── */
+  #round { gap:22px; max-width:760px; margin:0 auto; width:100%; }
+
+  .hud {
+    display:flex; justify-content:space-between; align-items:center; width:100%;
+    padding:10px 18px; background:rgba(0,245,255,0.07); border:2px solid var(--cyan);
+    box-shadow:0 0 15px rgba(0,245,255,0.3);
+  }
+  .hud-label { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--cyan); }
+  .hud-val { font-family:'Press Start 2P',monospace; font-size:12px; color:var(--gold); text-shadow:0 0 10px var(--gold); margin-top:4px; }
+
+  .progress-bar-wrap { width:100%; height:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--hotpink)); transition:width 0.6s ease; box-shadow:0 0 10px var(--cyan); }
+
+  .round-label { font-size:14px; color:var(--hotpink); text-shadow:0 0 8px var(--hotpink); letter-spacing:4px; text-transform:uppercase; }
+
+  .scenario-box {
+    font-family:'Orbitron',sans-serif; font-size:clamp(14px,2vw,20px);
+    color:white; text-align:center; line-height:1.6;
+    text-shadow:0 0 20px rgba(255,255,255,0.3); padding:20px 24px;
+    background:rgba(255,255,255,0.04); border-left:4px solid var(--gold); border-right:4px solid var(--gold);
+    max-width:680px; width:100%;
+  }
+
+  .wyr-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; width:100%; max-width:700px; align-items:center; }
+  .wyr-or {
+    font-family:'Press Start 2P',monospace; font-size:11px; color:var(--gold);
+    text-shadow:0 0 10px var(--gold); text-align:center; padding:8px;
+  }
+
+  .wyr-btn {
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    padding:20px 16px; background:var(--darkpanel); border:2px solid rgba(255,255,255,0.2);
+    color:white; cursor:pointer; font-family:'VT323',monospace; font-size:20px;
+    text-align:center; transition:all 0.15s; position:relative; overflow:hidden;
+    min-height:120px; justify-content:center;
+  }
+  .wyr-btn::before {
+    content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent); transition:left 0.4s;
+  }
+  .wyr-btn:hover::before { left:100%; }
+  .wyr-btn:hover { border-color:var(--cyan); box-shadow:0 0 24px rgba(0,245,255,0.4); transform:translateY(-4px); color:var(--cyan); }
+  .wyr-btn.chosen-a { border-color:var(--hotpink); background:rgba(255,45,120,0.15); box-shadow:0 0 30px rgba(255,45,120,0.5); color:var(--hotpink); animation:chosenPop 0.3s ease; }
+  .wyr-btn.chosen-b { border-color:var(--purple); background:rgba(191,95,255,0.15); box-shadow:0 0 30px rgba(191,95,255,0.5); color:var(--purple); animation:chosenPop 0.3s ease; }
+  @keyframes chosenPop { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  .wyr-emoji { font-size:38px; }
+
+  /* ── RESULTS ── */
+  #results { gap:24px; text-align:center; max-width:720px; width:100%; }
+
+  .result-title {
+    font-family:'Press Start 2P',monospace; font-size:clamp(13px,2.5vw,22px);
+    color:var(--gold); text-shadow:0 0 10px var(--gold),0 0 30px var(--orange);
+    line-height:1.7;
+  }
+
+  .persona-card {
+    width:100%; background:var(--darkpanel);
+    border:3px solid var(--gold); box-shadow:0 0 40px rgba(255,215,0,0.25), inset 0 0 30px rgba(255,215,0,0.03);
+    padding:28px 24px; display:flex; flex-direction:column; align-items:center; gap:14px;
+    animation: cardReveal 0.6s ease;
+  }
+  @keyframes cardReveal { 0%{opacity:0;transform:scale(0.92)} 100%{opacity:1;transform:scale(1)} }
+
+  .persona-emoji { font-size:72px; filter:drop-shadow(0 0 20px rgba(255,215,0,0.6)); animation:bounce 2s ease-in-out infinite; }
+
+  .persona-name {
+    font-family:'Press Start 2P',monospace; font-size:clamp(14px,2.5vw,22px);
+    color:var(--gold); text-shadow:0 0 10px var(--gold); line-height:1.6; text-align:center;
+  }
+
+  .persona-desc { font-size:21px; color:#ccc; line-height:1.5; max-width:540px; text-align:center; }
+
+  .tags-row { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:4px; }
+  .tag {
+    font-family:'Press Start 2P',monospace; font-size:7px; padding:5px 12px;
+    border:1px solid; letter-spacing:1px;
+  }
+  .tag-cyan  { color:var(--cyan); border-color:var(--cyan); background:rgba(0,245,255,0.07); }
+  .tag-pink  { color:var(--hotpink); border-color:var(--hotpink); background:rgba(255,45,120,0.07); }
+  .tag-gold  { color:var(--gold); border-color:var(--gold); background:rgba(255,215,0,0.07); }
+  .tag-green { color:var(--green); border-color:var(--green); background:rgba(57,255,20,0.07); }
+  .tag-purp  { color:var(--purple); border-color:var(--purple); background:rgba(191,95,255,0.07); }
+
+  .share-note { font-size:17px; color:rgba(255,255,255,0.45); letter-spacing:2px; margin-top:4px; }
+
+  /* ── TOP PRIORITIES ── */
+  .priorities-section { width:100%; }
+  .priorities-title { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--cyan); letter-spacing:2px; margin-bottom:14px; text-align:left; }
+  .priority-pills { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:14px; }
+  .priority-pill {
+    display:flex; align-items:center; gap:8px; padding:10px 18px;
+    background:rgba(0,245,255,0.07); border:2px solid var(--cyan);
+    box-shadow:0 0 14px rgba(0,245,255,0.2); animation:cardReveal 0.5s ease both;
+  }
+  .priority-pill-num { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--gold); }
+  .priority-pill-label { font-family:'VT323',monospace; font-size:20px; color:var(--cyan); letter-spacing:1px; }
+
+  .persona-why {
+    font-size:18px; color:#aaa; line-height:1.6; text-align:center; padding:14px 18px;
+    background:rgba(255,255,255,0.03); border-left:3px solid var(--hotpink);
+    font-style:italic;
+  }
+  .social-line {
+    font-size:18px; color:rgba(255,255,255,0.55); text-align:center;
+    letter-spacing:1px; line-height:1.6; padding:10px 0;
+  }
+  .social-line span { color:var(--gold); }
+
+  /* ── ANALYSIS OVERLAY ── */
+  #analysisOverlay {
+    position:fixed; inset:0; background:var(--dark); z-index:20000;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px;
+    opacity:0; pointer-events:none; transition:opacity 0.3s ease;
+  }
+  #analysisOverlay.show { opacity:1; pointer-events:all; }
+  .analysis-title {
+    font-family:'Press Start 2P',monospace; font-size:clamp(12px,2.5vw,20px);
+    color:var(--cyan); text-shadow:0 0 10px var(--cyan),0 0 30px var(--cyan);
+    text-align:center; line-height:1.8;
+  }
+  .analysis-lines { display:flex; flex-direction:column; gap:12px; align-items:flex-start; width:min(420px,90vw); }
+  .analysis-line {
+    font-family:'VT323',monospace; font-size:20px; color:#555; letter-spacing:2px;
+    transition:color 0.4s ease, text-shadow 0.4s ease;
+  }
+  .analysis-line.lit { color:var(--green); text-shadow:0 0 8px var(--green); }
+  .analysis-bar-wrap { width:min(360px,85vw); height:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); }
+  .analysis-bar-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--hotpink)); width:0; transition:width 1.6s ease; box-shadow:0 0 10px var(--cyan); }
+
+  /* ── VOICE SCREEN ── */
+  #voice { gap:24px; text-align:center; max-width:680px; width:100%; }
+
+  .voice-title {
+    font-family:'Press Start 2P',monospace; font-size:clamp(12px,2.2vw,18px);
+    color:var(--cyan); text-shadow:0 0 10px var(--cyan),0 0 30px var(--cyan);
+    line-height:1.8;
+  }
+  .voice-sub { font-size:20px; color:#bbb; max-width:500px; line-height:1.6; }
+
+  .voice-prompt {
+    width:100%; background:rgba(255,255,255,0.04);
+    border:2px solid var(--gold); padding:18px 20px;
+    font-family:'Orbitron',sans-serif; font-size:clamp(13px,1.8vw,17px);
+    color:white; text-align:center; line-height:1.6;
+    text-shadow:0 0 10px rgba(255,255,255,0.2);
+    box-shadow:0 0 20px rgba(255,215,0,0.15);
+  }
+
+  .voice-textarea {
+    width:100%; min-height:140px; background:var(--darkpanel);
+    border:2px solid rgba(255,255,255,0.2); color:white; padding:16px 18px;
+    font-family:'VT323',monospace; font-size:20px; line-height:1.6; resize:vertical;
+    outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .voice-textarea:focus { border-color:var(--cyan); box-shadow:0 0 20px rgba(0,245,255,0.25); }
+  .voice-textarea::placeholder { color:rgba(255,255,255,0.3); }
+
+  .char-count { font-size:15px; color:rgba(255,255,255,0.35); letter-spacing:2px; align-self:flex-end; margin-top:-16px; }
+
+  /* submitted state */
+  .voice-submitted {
+    width:100%; background:rgba(57,255,20,0.07); border:2px solid var(--green);
+    box-shadow:0 0 30px rgba(57,255,20,0.2); padding:28px 24px;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    animation:cardReveal 0.5s ease;
+  }
+  .submitted-emoji { font-size:56px; }
+  .submitted-msg { font-family:'Press Start 2P',monospace; font-size:clamp(11px,2vw,16px); color:var(--green); text-shadow:0 0 10px var(--green); line-height:1.8; text-align:center; }
+  .submitted-sub { font-size:19px; color:#aaa; line-height:1.5; text-align:center; }
+
+  .btn-row { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+
+  /* ── TOAST ── */
+  #toast {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px);
+    background:rgba(15,15,26,0.97); border:2px solid var(--cyan); color:var(--cyan);
+    font-family:'Press Start 2P',monospace; font-size:10px; padding:12px 24px;
+    box-shadow:0 0 20px rgba(0,245,255,0.4); z-index:10000; opacity:0;
+    transition:all 0.35s ease; pointer-events:none; text-align:center; max-width:90vw;
+  }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ── PARTICLE ── */
+  .particle {
+    position:fixed; pointer-events:none; z-index:10001; font-size:20px;
+    animation:particleFly 1s ease-out forwards;
+  }
+  @keyframes particleFly {
+    0%{opacity:1;transform:translate(0,0) scale(1)}
+    100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.3)}
+  }
+
+  @media (max-width:520px) {
+    .wyr-grid { grid-template-columns:1fr; }
+    .wyr-or { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- ═══════ INTRO ═══════ -->
+<div class="screen active" id="intro">
+  <img src="usask.png" alt="University of Saskatchewan" class="hero-image">
+  <span class="mic-emoji">🗳️</span>
+  <div class="show-title">WHAT UofS<br>STUDENTS WANT</div>
+  <div class="show-subtitle">★ USSU STUDENT VOICE ★</div>
+  <p class="intro-desc">Answer 6 quick campus dilemmas.<br>We'll tell you what kind of USask student you are — and what issues you actually care about.</p>
+
+  <div class="how-it-works">
+    <div class="how-step hl">
+      <div class="step-icon">🤔</div>
+      <div class="step-body">
+        <div class="step-title">6 CAMPUS DILEMMAS</div>
+        <div class="step-desc">Real USask situations — no wrong answers</div>
+      </div>
+    </div>
+    <div class="how-arrow">▼</div>
+    <div class="how-step">
+      <div class="step-icon">⚡</div>
+      <div class="step-body">
+        <div class="step-title">PICK YOUR SIDE</div>
+        <div class="step-desc">Would You Rather — choose what matters more to you</div>
+      </div>
+    </div>
+    <div class="how-arrow">▼</div>
+    <div class="how-step hl">
+      <div class="step-icon">🏆</div>
+      <div class="step-body">
+        <div class="step-title">YOUR STUDENT PERSONA</div>
+        <div class="step-desc">See what type of USask student you are + your top campus issues</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-main" onclick="startGame()">▶ START</button>
+  <p style="font-size:15px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:14px;">~ 2 MINUTES • NO SIGN-IN REQUIRED ~</p>
+</div>
+
+<!-- ═══════ ROUND ═══════ -->
+<div class="screen" id="round">
+  <div class="hud" style="width:100%;max-width:760px;">
+    <div><div class="hud-label">ROUND</div><div class="hud-val" id="roundNum">1 / 6</div></div>
+    <div style="text-align:center;"><div class="hud-label">USSU STUDENT VOICE</div></div>
+    <div style="text-align:right;"><div class="hud-label">PRIORITY SCAN</div><div class="hud-val" id="priorityScan">ACTIVE ▮</div></div>
+  </div>
+  <div class="progress-bar-wrap" style="width:100%;max-width:760px;">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="round-label" id="roundCategory">CAMPUS LIFE</div>
+  <div class="scenario-box" id="scenarioText">Loading...</div>
+  <div class="wyr-grid" id="wyrGrid">
+    <button class="wyr-btn" id="btnA" onclick="choose('a')">
+      <span class="wyr-emoji" id="emojiA">🎓</span>
+      <span id="textA">Option A</span>
+    </button>
+    <div class="wyr-or">OR</div>
+    <button class="wyr-btn" id="btnB" onclick="choose('b')">
+      <span class="wyr-emoji" id="emojiB">🏠</span>
+      <span id="textB">Option B</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════ RESULTS ═══════ -->
+<div class="screen" id="results">
+  <div class="result-title">🎉 YOUR RESULTS ARE IN!</div>
+  <div class="persona-card">
+    <div class="persona-emoji" id="resEmoji">🦅</div>
+    <div class="persona-name" id="resName">THE HUSTLER</div>
+    <div class="persona-desc" id="resDesc">You're all about making the most of every opportunity at USask.</div>
+    <div class="tags-row" id="resTags"></div>
+  </div>
+
+  <div class="priorities-section">
+    <div class="priorities-title">🎯 YOUR TOP PRIORITIES</div>
+    <div class="priority-pills" id="priorityPills"></div>
+    <div class="persona-why" id="personaWhy"></div>
+  </div>
+
+  <div class="social-line" id="socialLine"></div>
+
+  <p class="share-note">~ SHARE YOUR RESULT WITH FRIENDS ~</p>
+  <div class="btn-row">
+    <button class="btn-main" onclick="shareResult()">📤 SHARE</button>
+    <button class="btn-secondary" onclick="goToVoice()">🎙️ ADD YOUR VOICE</button>
+  </div>
+</div>
+
+<!-- ═══════ VOICE ═══════ -->
+<div class="screen" id="voice">
+  <span style="font-size:64px;animation:bounce 1.4s ease-in-out infinite;display:block;filter:drop-shadow(0 0 18px var(--cyan));">🎙️</span>
+  <div class="voice-title">YOUR VOICE MATTERS</div>
+  <p class="voice-sub">You've told us what kind of student you are. Now tell us what YOU actually want from USSU — in your own words.</p>
+
+  <div class="voice-prompt">
+    💬 What's ONE change that would actually improve student life at UofS?
+  </div>
+
+  <div id="voiceInputArea" style="width:100%;display:flex;flex-direction:column;gap:8px;">
+    <textarea class="voice-textarea" id="voiceText" maxlength="400" placeholder="Type your thoughts here... (e.g. 'I wish there were more affordable meal plans' or 'The bus schedule after 10pm is terrible')" oninput="updateCharCount()"></textarea>
+    <div class="char-count" id="charCount">0 / 400</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-main" onclick="submitVoice()">📨 SUBMIT</button>
+    <button class="btn-secondary" onclick="skipVoice()">SKIP →</button>
+  </div>
+  <button class="btn-secondary" style="margin-top:4px;font-size:9px;opacity:0.7;" onclick="showScreen('results')">← BACK TO RESULTS</button>
+</div>
+
+<!-- ═══════ ANALYSIS OVERLAY ═══════ -->
+<div id="analysisOverlay">
+  <div class="analysis-title">⚡ SCANNING YOUR<br>STUDENT PROFILE...</div>
+  <div class="analysis-lines">
+    <div class="analysis-line" id="al1">▸ Analyzing your responses...</div>
+    <div class="analysis-line" id="al2">▸ Detecting student priorities...</div>
+    <div class="analysis-line" id="al3">▸ Matching your student persona...</div>
+    <div class="analysis-line" id="al4">▸ Generating your profile...</div>
+  </div>
+  <div class="analysis-bar-wrap"><div class="analysis-bar-fill" id="analysisBar"></div></div>
+</div>
+
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════
+const rounds = [
+  {
+    category: "MONEY VS TIME",
+    scenario: "You're struggling this semester — what would actually help you more?",
+    a: { emoji:"💸", text:"Lower tuition & fees so you stress less about money", tags:["affordability","financial"] },
+    b: { emoji:"😮‍💨", text:"Lighter course workload so you actually have time to breathe", tags:["academic","wellness"] }
+  },
+  {
+    category: "COMMUTER VS CAMPUS LIFE",
+    scenario: "You have a long day on campus — what matters more?",
+    a: { emoji:"🚌", text:"Reliable, frequent buses so you can get home fast", tags:["transit","safety"] },
+    b: { emoji:"🏛️", text:"More spaces & events on campus so staying longer is actually enjoyable", tags:["campus_life","social"] }
+  },
+  {
+    category: "FOOD REALITY",
+    scenario: "It's 8pm and you're starving at Place Riel — what would you rather have?",
+    a: { emoji:"🍕", text:"Cheap, filling food options even if they're basic", tags:["affordability","campus_life"] },
+    b: { emoji:"🥗", text:"Better quality food even if it's more expensive", tags:["campus_life","wellness"] }
+  },
+  {
+    category: "GROUP WORK STRUGGLE",
+    scenario: "You're stuck in a bad group project — what should change?",
+    a: { emoji:"📋", text:"Professors grade individuals more strictly — less freeloading", tags:["academic","financial"] },
+    b: { emoji:"📝", text:"Less group work overall, more individual assignments", tags:["academic","wellness"] }
+  },
+  {
+    category: "WINTER SURVIVAL",
+    scenario: "It's -30°C and you have back-to-back classes — what would help more?",
+    a: { emoji:"🌡️", text:"Heated indoor pathways & tunnels between buildings", tags:["campus_life","safety"] },
+    b: { emoji:"💻", text:"More classes recorded so you don't have to come in", tags:["academic","wellness"] }
+  },
+  {
+    category: "SOCIAL VS ACADEMIC BALANCE",
+    scenario: "You finally have free time — what do you wish campus offered more of?",
+    a: { emoji:"🎉", text:"Bigger events, concerts, and social life on campus", tags:["social","community"] },
+    b: { emoji:"🛋️", text:"More quiet, comfortable spaces to relax or study", tags:["campus_life","wellness"] }
+  }
+];
+
+// Personas — matched by top tag combo
+const personas = [
+  {
+    id:"wellness_warrior",
+    name:"THE WELLNESS WARRIOR",
+    emoji:"🧘",
+    desc:"You put student wellbeing above everything. You know that burnt-out students can't succeed, and you want USask to actually invest in keeping students healthy — mentally and physically.",
+    tags:["mental_health","wellness"],
+    tagClasses:["tag-cyan","tag-green"],
+    issues:["Mental Health Services","Work-Life Balance","Safe Campus Environment","Affordable Housing"]
+  },
+  {
+    id:"budget_hawk",
+    name:"THE BUDGET HAWK",
+    emoji:"💰",
+    desc:"Every dollar counts. You're watching your bank account while paying tuition, rent, and groceries — and you think USSU should be fighting for students' wallets, not just vibes.",
+    tags:["affordability","financial"],
+    tagClasses:["tag-gold","tag-pink"],
+    issues:["Tuition Costs","Cost of Living","Food Affordability","Student Bursaries"]
+  },
+  {
+    id:"academic_achiever",
+    name:"THE ACADEMIC ACHIEVER",
+    emoji:"🎓",
+    desc:"You're here to learn and you take it seriously. You want resources, study spaces, and academic support that actually match the fees you're paying at USask.",
+    tags:["academic","careers"],
+    tagClasses:["tag-gold","tag-cyan"],
+    issues:["Study Spaces","Academic Resources","Co-op & Internships","Course Availability"]
+  },
+  {
+    id:"community_builder",
+    name:"THE COMMUNITY BUILDER",
+    emoji:"🤝",
+    desc:"USask is more than a degree factory to you. You want a campus where every student — domestic, international, Indigenous — feels like they truly belong.",
+    tags:["community","diversity"],
+    tagClasses:["tag-pink","tag-purp"],
+    issues:["Campus Events","Indigenous Student Support","International Students","Student Clubs"]
+  },
+  {
+    id:"safety_first",
+    name:"THE SAFETY ADVOCATE",
+    emoji:"🛡️",
+    desc:"You believe every student deserves to feel safe getting to and from class, no matter the hour or the weather. Campus infrastructure and transit are your priorities.",
+    tags:["safety","transit"],
+    tagClasses:["tag-cyan","tag-green"],
+    issues:["Late-Night Safety","Campus Transit","Building Access","Lighting & Security"]
+  },
+  {
+    id:"campus_life_fan",
+    name:"THE CAMPUS ENTHUSIAST",
+    emoji:"🏟️",
+    desc:"You love everything about being a USask Huskie. You want a vibrant, active campus life with events, spaces, and energy that makes uni actually fun.",
+    tags:["campus_life","social"],
+    tagClasses:["tag-gold","tag-pink"],
+    issues:["Student Events","Campus Facilities","Food & Dining","Recreational Spaces"]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let currentRound = 0;
+let tagCounts = {};
+let chosen = false;
+
+// ═══════════════════════════════════════════════════════════
+//  GAME FLOW
+// ═══════════════════════════════════════════════════════════
+function startGame() {
+  currentRound = 0; tagCounts = {}; chosen = false;
+  showScreen('round');
+  loadRound();
+}
+
+function loadRound() {
+  chosen = false;
+  const r = rounds[currentRound];
+
+  document.getElementById('roundNum').textContent = `${currentRound+1} / ${rounds.length}`;
+  document.getElementById('priorityScan').textContent = currentRound < 2 ? 'ACTIVE ▮' : currentRound < 4 ? 'SCANNING ▮' : 'LOCKING IN ▮';
+  document.getElementById('progressFill').style.width = `${(currentRound / rounds.length) * 100}%`;
+  document.getElementById('roundCategory').textContent = r.category;
+  document.getElementById('scenarioText').textContent = r.scenario;
+  document.getElementById('emojiA').textContent = r.a.emoji;
+  document.getElementById('textA').textContent = r.a.text;
+  document.getElementById('emojiB').textContent = r.b.emoji;
+  document.getElementById('textB').textContent = r.b.text;
+
+  document.getElementById('btnA').className = 'wyr-btn';
+  document.getElementById('btnB').className = 'wyr-btn';
+  document.getElementById('btnA').disabled = false;
+  document.getElementById('btnB').disabled = false;
+}
+
+function choose(side) {
+  if (chosen) return;
+  chosen = true;
+
+  const r = rounds[currentRound];
+  const picked = side === 'a' ? r.a : r.b;
+  picked.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+
+  document.getElementById('btnA').className = 'wyr-btn' + (side==='a' ? ' chosen-a' : '');
+  document.getElementById('btnB').className = 'wyr-btn' + (side==='b' ? ' chosen-b' : '');
+  document.getElementById('btnA').disabled = true;
+  document.getElementById('btnB').disabled = true;
+
+  spawnParticles(document.getElementById(side==='a'?'btnA':'btnB'));
+
+  setTimeout(() => {
+    currentRound++;
+    if (currentRound >= rounds.length) showResults();
+    else loadRound();
+  }, 700);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TAG LABELS
+// ═══════════════════════════════════════════════════════════
+const tagLabels = {
+  mental_health:"Mental Health", wellness:"Wellbeing", affordability:"Affordability",
+  financial:"Financial Aid", academic:"Academics", social:"Social Life",
+  community:"Community", diversity:"Equity & Inclusion", safety:"Campus Safety",
+  transit:"Transit & Commute", careers:"Careers & Co-ops", campus_life:"Campus Life",
+  housing:"Housing"
+};
+
+// ═══════════════════════════════════════════════════════════
+//  ANALYSIS TRANSITION
+// ═══════════════════════════════════════════════════════════
+function runAnalysis(callback) {
+  const overlay = document.getElementById('analysisOverlay');
+  const bar = document.getElementById('analysisBar');
+  const lines = ['al1','al2','al3','al4'];
+
+  overlay.classList.add('show');
+  setTimeout(() => { bar.style.width = '100%'; }, 80);
+
+  lines.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add('lit');
+    }, 300 + i * 380);
+  });
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    callback();
+  }, 2000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RESULTS
+// ═══════════════════════════════════════════════════════════
+function showResults() {
+  runAnalysis(() => {
+    // find persona
+    let bestPersona = personas[0], bestScore = -1;
+    personas.forEach(p => {
+      let s = p.tags.reduce((acc, t) => acc + (tagCounts[t] || 0), 0);
+      if (s > bestScore) { bestScore = s; bestPersona = p; }
+    });
+
+    document.getElementById('resEmoji').textContent = bestPersona.emoji;
+    document.getElementById('resName').textContent = bestPersona.name;
+    document.getElementById('resDesc').textContent = bestPersona.desc;
+
+    const tagRow = document.getElementById('resTags');
+    tagRow.innerHTML = bestPersona.tags.map((t,i) =>
+      `<span class="tag ${bestPersona.tagClasses[i]||'tag-cyan'}">${t.replace('_',' ').toUpperCase()}</span>`
+    ).join('');
+
+    // top 3 priorities from tagCounts
+    const sorted = Object.entries(tagCounts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const top3Labels = sorted.map(([tag]) => tagLabels[tag] || tag);
+
+    const pillsEl = document.getElementById('priorityPills');
+    pillsEl.innerHTML = sorted.map(([tag], i) => `
+      <div class="priority-pill" style="animation-delay:${i*0.12}s">
+        <span class="priority-pill-num">#${i+1}</span>
+        <span class="priority-pill-label">${tagLabels[tag] || tag}</span>
+      </div>`).join('');
+
+    // dynamic "why you got this" explanation
+    const whyText = top3Labels.length >= 2
+      ? `You got this persona because you prioritized ${top3Labels.slice(0,-1).join(', ')} and ${top3Labels[top3Labels.length-1]} most often.`
+      : `You got this persona because you prioritized ${top3Labels[0] || 'these issues'} most.`;
+    document.getElementById('personaWhy').textContent = whyText;
+
+    // social validation line
+    const sl = document.getElementById('socialLine');
+    if (top3Labels.length >= 2) {
+      sl.innerHTML = `Students like you care most about <span>${top3Labels[0]}</span>, <span>${top3Labels[1]}</span>${top3Labels[2] ? ` and <span>${top3Labels[2]}</span>` : ''}.`;
+    }
+
+    document.getElementById('progressFill').style.width = '100%';
+    showScreen('results');
+    setTimeout(() => showToast('🎉 Your results are in — share with a friend!'), 500);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VOICE SCREEN
+// ═══════════════════════════════════════════════════════════
+function goToVoice() {
+  // reset voice area in case they replay
+  document.getElementById('voiceInputArea').innerHTML = `
+    <textarea class="voice-textarea" id="voiceText" maxlength="400" placeholder="Type your thoughts here... (e.g. 'I wish there were more affordable meal plans' or 'The bus schedule after 10pm is terrible')" oninput="updateCharCount()"></textarea>
+    <div class="char-count" id="charCount">0 / 400</div>`;
+  showScreen('voice');
+}
+
+function updateCharCount() {
+  const ta = document.getElementById('voiceText');
+  const cc = document.getElementById('charCount');
+  if (ta && cc) cc.textContent = `${ta.value.length} / 400`;
+}
+
+function submitVoice() {
+  const ta = document.getElementById('voiceText');
+  const text = ta ? ta.value.trim() : '';
+  if (!text) { showToast('✏️ Write something first — we want to hear from you!'); return; }
+
+  // Replace input area with thank you state
+  document.getElementById('voiceInputArea').innerHTML = `
+    <div class="voice-submitted">
+      <div class="submitted-emoji">🙌</div>
+      <div class="submitted-msg">RESPONSE RECORDED!</div>
+      <div class="submitted-sub">Thanks for speaking up. Your voice is part of what shapes USSU decisions at UofS.</div>
+    </div>`;
+
+  // hide submit/skip, show final buttons
+  document.querySelector('#voice .btn-row').innerHTML = `
+    <button class="btn-main" onclick="shareResult()">📤 SHARE YOUR RESULT</button>
+    <button class="btn-secondary" onclick="restartGame()">↩ PLAY AGAIN</button>`;
+
+  spawnParticles(document.querySelector('.voice-submitted'));
+  showToast('🎙️ Voice submitted — thank you!');
+}
+
+function skipVoice() {
+  document.querySelector('#voice .btn-row').innerHTML = `
+    <button class="btn-main" onclick="shareResult()">📤 SHARE YOUR RESULT</button>
+    <button class="btn-secondary" onclick="restartGame()">↩ PLAY AGAIN</button>`;
+  showToast('No worries! Share your result anyway 👇');
+}
+
+function shareResult() {
+  const name = document.getElementById('resName').textContent;
+  const text = `I'm ${name} at UofS! Find out what kind of student you are 👇\nwhatUofSstudentswant.ca #UofS #USSU`;
+  if (navigator.share) {
+    navigator.share({ title: 'What UofS Students Want', text }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('📋 Copied! Paste it anywhere to share 🎉'))
+    .catch(() => showToast('📤 Share: ' + document.getElementById('resName').textContent));
+}
+
+function restartGame() { startGame(); }
+
+// ═══════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function spawnParticles(el) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+  const emojis = ['⭐','🎉','✨','🏆','💫','🎊'];
+  for (let i=0;i<6;i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    const angle = (i/6)*Math.PI*2, dist = 60+Math.random()*50;
+    p.style.cssText = `left:${cx}px;top:${cy}px;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;animation-duration:${0.8+Math.random()*0.4}s;`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1200);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  STARS
+// ═══════════════════════════════════════════════════════════
+(function initStars() {
+  const c = document.getElementById('stars');
+  for (let i=0;i<110;i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()*2.5+0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*4+2}s;animation-delay:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
